@@ -26,3 +26,34 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   </React.StrictMode>
 );
 ```
+
+### Fetching Data and Error handling
+
+```jsx
+import { useQuery } from "@tanstack/react-query";
+
+const TodoList = () => {
+  const fetcTodos = () => axios.get;
+  "https://jsonplaceholder.typicode.com/todos".then((res) => res.data);
+
+  const { data: todos, error } = useQuery({
+    queryKey: ["todos"],
+    queryFn: fetcTodos,
+  });
+
+  //error
+  if(error) return <p>{error}<p/>
+
+  return (
+    <ul className="list-group">
+      {todos?.map((todo) => (
+        <li key={todo.id} className="list-group-item">
+          {todo.title}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default TodoList;
+```
