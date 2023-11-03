@@ -62,7 +62,7 @@ const TodoList = () => {
 export default TodoList;
 ```
 
-## Showing Loading Indicator
+### Showing Loading Indicator
 
 ```jsx
 const fetchTodos = () =>
@@ -113,7 +113,7 @@ import useTodos from "./hooks/useTodos";
 const { data: todos, error, isLoading } = useTodos();
 ```
 
-## Using React Query DevTools
+### Using React Query DevTools
 
 To install React Query DevTools, run the following command:
 
@@ -136,7 +136,7 @@ function App() {
 }
 ```
 
-## Customizing Query Settings
+### Customizing Query Settings
 
 You can customize query settings in the QueryClient. For example, to configure auto-refresh options, you can do the following:
 
