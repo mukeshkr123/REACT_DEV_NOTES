@@ -27,18 +27,18 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 );
 ```
 
-### Fetching Data and Error handling
+### Fetching Data and Error handling a
 
 ```jsx
 import { useQuery } from "@tanstack/react-query";
 
 const TodoList = () => {
-  const fetcTodos = () => axios.get;
+  const fetchTodos = () => axios.get;
   "https://jsonplaceholder.typicode.com/todos".then((res) => res.data);
 
   const { data: todos, error } = useQuery({
     queryKey: ["todos"],
-    queryFn: fetcTodos,
+    queryFn: fetchTodos,
   });
 
   //error
@@ -56,4 +56,24 @@ const TodoList = () => {
 };
 
 export default TodoList;
+```
+
+## Showing loading indicator
+
+```jsx
+const fetchTodos = () =>
+  axios.get <
+  Todo >
+  "https://jsonplaceholder.typicode.com/todos".then((res) => res.data);
+
+const {
+  data: todos,
+  error,
+  isLoading,
+} = useQuery({
+  queryKey: ["todos"],
+  queryFn: fetchTodos,
+});
+
+if (isLoading) return <p>Loading.......</p>;
 ```
