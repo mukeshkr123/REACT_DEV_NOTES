@@ -180,3 +180,38 @@ Customize the options according to your application's requirements:
 - `refetchOnWindowFocus`: Whether to refetch data when the window is refocused.
 - `refetchOnReconnect`: Whether to refetch data when the network is reconnected.
 - `refetchOnMount`: Whether to refetch data when a component is mounted.
+  Certainly! Here's the information about parameterized queries added to your README.md:
+
+### Parameterized Queries
+
+You can use parameterized queries in React Query to fetch data based on specific parameters. For example, you can fetch posts for a particular user by passing the `userId` as a parameter to the query.
+
+To use parameterized queries, follow these steps:
+
+1. Create a custom query hook that accepts the parameter you want to use in the query, such as `userId`:
+
+```jsx
+const usePosts = (userId: number | undefined) => {
+  const fetchPosts = () =>
+    axios
+      .get("https://jsonplaceholder.typicode.com/posts", {
+        params: {
+          userId,
+        },
+      })
+      .then((res) => res.data);
+
+  return useQuery<Post[], Error>({
+    queryKey: userId ? ["users", userId, "posts"] : ["posts"], // Whenever userId is changed, React Query fetches posts for this user (dependency).
+    queryFn: fetchPosts,
+    staleTime: 10 * 60 * 60 * 1000, // 10 hours in seconds
+  });
+};
+```
+
+2. Use this custom query hook in your component, passing the `userId` as a parameter:
+
+```jsx
+const { data: posts, isLoading, error } = usePosts(userId);
+// Pass the userId as a parameter
+```
