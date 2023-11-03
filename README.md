@@ -108,3 +108,24 @@ import useTodos from "./hooks/useTodos";
 
 const { data: todos, error, isLoading } = useTodos();
 ```
+
+## Using React Query DevTools
+
+Install
+
+`npm install react-query-devtools`
+
+add this in main js file
+
+```jsx
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      {/* The rest of your application */}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+}
+```
