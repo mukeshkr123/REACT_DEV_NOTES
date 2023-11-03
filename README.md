@@ -215,3 +215,91 @@ const usePosts = (userId: number | undefined) => {
 const { data: posts, isLoading, error } = usePosts(userId);
 // Pass the userId as a parameter
 ```
+
+### Pagination Queries
+
+1. Create a custom query hook that accepts a query object with page and pageSize parameters. This hook will fetch a subset of data based on the provided parameters.
+
+```jsx
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+interface Post {
+  id: number;
+  title: string;
+  body: string;
+  userId: number;
+}
+
+interface PostQuery {
+  page: number;
+  pageSize: number;
+}
+
+const usePosts = (query: PostQuery) => {
+  const fetchPosts = () =>
+    axios
+      .get("https://jsonplaceholder.typicode.com/posts", {
+        params: {
+          _start: (query.page - 1) * query.pageSize,
+          _limit: query.pageSize,
+        },
+      })
+      .then((res) => res.data);
+
+  return useQuery<Post[], Error>({
+    queryKey: ["posts", query],
+    queryFn: fetchPosts,
+    staleTime: 10 * 60 * 60 * 1000, // 10 hours in seconds
+    keepPreviousData: true, // Keep previous data for the current page for a seamless experience.
+  });
+};
+
+export default usePosts;
+```
+
+2. Use the custom query hook in your component to fetch paginated data. You can control the page and pageSize to load the data you need.
+
+```jsx
+import { useState } from "react";
+import usePosts from "./hooks/usePosts";
+
+const PostList = () => {
+  const pageSize = 10;
+  const [page, setPage] = useState(1);
+  const { data: posts, isLoading, error } = usePosts({ page, pageSize });
+
+  if (isLoading) return <p>Loading........</p>;
+
+  if (error) return <p>{error.message}</p>;
+
+  return (
+    <>
+      <ul className="list-group">
+        {posts.map((post) => (
+          <li key={post.id} className="list-group-item">
+            {post.title}
+          </li>
+        ))}
+      </ul>
+      <button
+        className="btn btn-primary my-3"
+        disabled={page === 1}
+        onClick={() => setPage(page - 1)}
+      >
+        Previous
+      </button>
+      <button
+        className="btn btn-primary my-3 ms-1"
+        onClick={() => setPage(page + 1)}
+      >
+        Next
+      </button>
+    </>
+  );
+};
+
+export default PostList;
+```
+
+With this setup, you can fetch and display data in pages, allowing users to navigate through the dataset efficiently.
