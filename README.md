@@ -77,3 +77,34 @@ const {
 
 if (isLoading) return <p>Loading.......</p>;
 ```
+
+### Creating a Custom Query Hook
+
+1. Create a custom query hook `useTods.ts`
+
+```jsx
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+const useTodos = () => {
+  const fetchTodos = () =>
+    axios
+      .get("https://jsonplaceholder.typicode.com/todos")
+      .then((res) => res.data);
+
+  return useQuery({
+    queryKey: ["todos"],
+    queryFn: fetchTodos,
+  });
+};
+
+export default useTodos;
+```
+
+2. Use This in any component
+
+```jsx
+import useTodos from "./hooks/useTodos";
+
+const { data: todos, error, isLoading } = useTodos();
+```
