@@ -324,7 +324,7 @@ interface Todo {
 const TodoForm = () => {
   // Access the QueryClient and Mutation function
   const queryClient = useQueryClient();
-  const addTodo = useMutation({
+  const addTodo = useMutation<Todo, Error, Todo>({
     // Define the mutation function
     mutationFn: (todo: Todo) =>
       axios
@@ -377,4 +377,24 @@ const TodoForm = () => {
 };
 
 export default TodoForm;
+```
+
+### Handling mutation Errors
+
+add this in above file
+
+````ts
+{addTodo.error && (
+        <div className="alet alert-danger">{addTodo.error.message}</div>
+      )}```
+````
+
+### Showing Mutations Errors
+
+add this in above file
+
+```ts
+<button disabled={addTodo.isLoading} className="btn btn-primary">
+  {addTodo.isLoading ? "Adding.." : "Add"}
+</button>
 ```
