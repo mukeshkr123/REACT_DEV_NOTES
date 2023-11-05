@@ -269,3 +269,39 @@ function List({ items, heading, onSelectItem }: ListProps) {
 - State represents data managed by a component.
 - It is similar to local variables.
 - State is mutable, and you can update it using hooks like `useState`.
+
+### Passing children
+
+-Parent componet `app.tsx` passing children
+
+```ts
+import Alert from "./components/Alert";
+
+function App() {
+  return (
+    <>
+      <Alert>
+        This is my alert <span>Hello mukesh</span>
+      </Alert>
+    </>
+  );
+}
+
+export default App;
+```
+
+- Comonent getting children as props in `Alert.tsx`
+
+```ts
+import { ReactNode } from "react";
+
+interface Props {
+  children: ReactNode;
+}
+
+const Alert = ({ children }: Props) => {
+  return <div className="alert alert-primary">{children}</div>;
+};
+
+export default Alert;
+```
