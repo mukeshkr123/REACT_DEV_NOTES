@@ -1,16 +1,12 @@
-import { FormEvent, useRef } from "react";
+import { FormEvent, useState } from "react";
 
 const ExpenseForm = () => {
-  const nameRef = useRef<HTMLInputElement>(null);
-  const amountRef = useRef<HTMLInputElement>(null);
-
-  const person = { name: "", amount: 0 };
-
+  const [person, setPerson] = useState({
+    name: " ",
+    amount: "",
+  });
   const handlSubmit = (event: FormEvent) => {
     event.preventDefault();
-    if (nameRef.current !== null) person.name = nameRef.current.value;
-    if (amountRef.current !== null)
-      person.amount = parseInt(amountRef.current.value);
     console.log(person);
   };
 
@@ -18,30 +14,23 @@ const ExpenseForm = () => {
     <div className="m-2">
       <h2>Expense Form</h2>
       <form onSubmit={handlSubmit}>
-        <div className="form-group">
-          <label htmlFor="description">Description</label>
-          <input
-            ref={nameRef}
-            type="text"
-            id="description"
-            className="form-control"
-          />
-        </div>
+        <label htmlFor="name">Name</label>
+        <input
+          type="text"
+          onChange={(e) => setPerson({ ...person, name: e.target.value })}
+          id="name"
+          value={person.name}
+          className="form-control"
+        />
 
-        <div className="form-group">
-          <label htmlFor="amount">Amount</label>
-          <input
-            ref={amountRef}
-            type="text"
-            id="amount"
-            className="form-control"
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="category">Category</label>
-          <input type="text" id="category" className="form-control" />
-        </div>
+        <label htmlFor="amount">Amount</label>
+        <input
+          type="text"
+          onChange={(e) => setPerson({ ...person, amount: e.target.value })}
+          value={person.amount}
+          id="amount"
+          className="form-control"
+        />
 
         <button type="submit" className="btn mt-3 btn-primary">
           Submit
