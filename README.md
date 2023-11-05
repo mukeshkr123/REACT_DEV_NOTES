@@ -372,21 +372,23 @@ Inline styles allow you to define styles directly within your React components. 
 - You can add icons to your applications using the `react-icons` library.
 - Various UI libraries are available to assist in building beautiful and modern applications. Some popular options include Bootstrap, Material UI, TailwindCSS, DaisyUI, ChakraUI, and more.
 
-Styling React components can greatly impact the user experience, and choosing the right approach depends on your project's requirements and your team's preferences.
+# Building Forms in React
 
-## Building Forms
+This guide will help you understand how to create forms in React using different techniques and libraries, such as React Hook Form and Zod for schema-based validation.
 
-### Handling form submission
+## Handling Form Submission
+
+To handle form submissions, set the `onSubmit` attribute of the form element.
 
 ```tsx
 const ExpenseForm = () => {
-  const handlSubmit = (event: FormEvent) => {
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     console.log("submitted");
   };
 
   return (
-    <form onSubmit={handlSubmit}>
+    <form onSubmit={handleSubmit}>
       <button type="submit" className="btn mt-3 btn-primary">
         Submit
       </button>
@@ -395,86 +397,46 @@ const ExpenseForm = () => {
 };
 ```
 
-### Acessing Input fields
+## Accessing Input Fields
+
+You can access input field values using the `ref` hook or manage form state using the `useState` hook.
+
+### Using `ref` Hook
 
 ```tsx
-const ExpenseForm = () => {
-  const nameRef = useRef<HTMLInputElement>(null);
-  const amountRef = useRef<HTMLInputElement>(null);
-
-  const person = { name: "", amount: 0 };
-
-  const handlSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    if (nameRef.current !== null) person.name = nameRef.current.value;
-    if (amountRef.current !== null)
-      person.amount = parseInt(amountRef.current.value);
-    console.log(person);
-  };
-
-  return (
-    <form onSubmit={handlSubmit}>
-      <label htmlFor="name">Name</label>
-      <input ref={nameRef} type="text" id="name" className="form-control" />
-
-      <label htmlFor="amount">Amount</label>
-      <input ref={amountRef} type="text" id="amount" className="form-control" />
-
-      <button type="submit" className="btn mt-3 btn-primary">
-        Submit
-      </button>
-    </form>
-  );
-};
+const nameRef = useRef<HTMLInputElement>(null);
+const amountRef = useRef<HTMLInputElement>(null);
+// ...
+<input ref={nameRef} type="text" id="name" className="form-control" />
+<input ref={amountRef} type="text" id="amount" className="form-control" />
 ```
 
-### MANAGING FORM STATE USING THE STATE HOOK
+### Using `useState` Hook
 
 ```tsx
-
-  const [person, setPerson] = useState({
-    name: " ",
-    amount: 0,
-  });
-
-  const handlSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    console.log(person);
-  };
-
-  return (
-      <form onSubmit={handlSubmit}>
-        <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          onChange={(e) => setPerson({ ...person, name: e.target.value })}
-          value={person.name}
-          className="form-control"
-        />
-
-        <label htmlFor="amount">Amount</label>
-        <input
-          type="text"
-          onChange={(e) =>
-            setPerson({ ...person, amount: parseInt(e.target.value) })
-          }
-          value={person.amount}
-          id="amount"
-          className="form-control"
-        />
-
-        <button type="submit" className="btn mt-3 btn-primary">
-          Submit
-        </button>
-      </form>
-  );
-};
-
+const [person, setPerson] = useState({
+  name: "",
+  amount: 0,
+});
+// ...
+<input
+  type="text"
+  onChange={(e) => setPerson({ ...person, name: e.target.value })}
+  value={person.name}
+  className="form-control"
+/>
+<input
+  type="text"
+  onChange={(e) => setPerson({ ...person, amount: parseInt(e.target.value) })}
+  value={person.amount}
+  id="amount"
+  className="form-control"
+/>
 ```
 
-### Managing state with react hook form
+## Managing State with React Hook Form
 
-install `npm i react-hook-form`
+Use the React Hook Form library to simplify form state management.
 
 ```tsx
 import { FieldValues, useForm } from "react-hook-form";
@@ -485,51 +447,37 @@ const ExpenseForm = () => {
   const onSubmit = (data: FieldValues) => console.log(data);
 
   return (
-    <div className="m-2">
-      <h2>Expense Form</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="name">Name</label>
-        <input
-          {...register("name")}
-          type="text"
-          id="name"
-          className="form-control"
-        />
-
-        <label htmlFor="amount">Amount</label>
-        <input
-          {...register("amount")}
-          type="text"
-          id="amount"
-          className="form-control"
-        />
-
-        <button type="submit" className="btn mt-3 btn-primary">
-          Submit
-        </button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input
+        {...register("name")}
+        type="text"
+        id="name"
+        className="form-control"
+      />
+      <input
+        {...register("amount")}
+        type="text"
+        id="amount"
+        className="form-control"
+      />
+      <button type="submit" className="btn mt-3 btn-primary">
+        Submit
+      </button>
+    </form>
   );
 };
-
-export default ExpenseForm;
 ```
 
-### Appplying validations
+## Applying Validations
 
-```ts
-interface FormData {
-  name: string;
-  amount: number;
-}
+You can apply validations to form fields, such as "required" and "minLength," using React Hook Form.
 
+```tsx
 const {
   register,
   handleSubmit,
   formState: { errors },
 } = useForm<FormData>();
-
-const onSubmit = (data: FieldValues) => console.log(data);
 
 <input
   {...register("name", { required: true, minLength: 3 })}
@@ -537,95 +485,63 @@ const onSubmit = (data: FieldValues) => console.log(data);
   id="name"
   className="form-control"
 />;
-
 {
   errors.name?.type === "required" && <p>The name field is required</p>;
 }
 {
   errors.name?.type === "minLength" && (
-    <p> The name must be at least 3 characters </p>
+    <p>The name must be at least 3 characters</p>
   );
 }
 ```
 
-### Schema based validation with zod
+## Schema-Based Validation with Zod
 
-install
+You can use the Zod library for schema-based validation.
 
-- `npm i zod`
-- `npm i @hookform/resolvers`
-
-```ts
-import { FieldValues, useForm } from "react-hook-form";
+```tsx
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-interface FormData {
-  name: string;
-  amount: number;
-}
 
 const schema = z.object({
   name: z.string().min(3, "Minimum 3 characters required"),
   amount: z
-    .number({ invalid_type_error: " Amount  is required" })
+    .number({ invalid_type_error: "Amount is required" })
     .min(18, "Minimum 18 characters required"),
 });
 
-const ExpenseForm = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-  });
+const {
+  register,
+  handleSubmit,
+  formState: { errors },
+} = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  const onSubmit = (data: FieldValues) => console.log(data);
+<input {...register("name")} type="text" id="name" className="form-control" />;
+{
+  errors.name && <p>{errors.name.message}</p>;
+}
 
-  return (
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="name">Name</label>
-        <input
-          {...register("name")}
-          type="text"
-          id="name"
-          className="form-control"
-        />
-
-        {errors.name && <p>{errors.name.message}</p>}
-
-        <input
-          {...register("amount", { valueAsNumber: true })}
-          type="text"
-          id="amount"
-          className="form-control"
-        />
-
-        {errors.amount && <p>{errors.amount.message}</p>}
-
-        <button type="submit" className="btn mt-3 btn-primary">
-          Submit
-        </button>
-      </form>
-    </div>
-  );
-};
-
-export default ExpenseForm;
+<input
+  {...register("amount", { valueAsNumber: true })}
+  type="text"
+  id="amount"
+  className="form-control"
+/>;
+{
+  errors.amount && <p>{errors.amount.message}</p>;
+}
 ```
 
-### Disabling submit btn
+## Disabling Submit Button
+
+You can disable the submit button based on form validity.
 
 ```tsx
 const {
   register,
   handleSubmit,
   formState: { errors, isValid },
-} = useForm<FormData>({
-  resolver: zodResolver(schema),
-});
+} = useForm<FormData>({ resolver: zodResolver(schema) });
 
 <button type="submit" disabled={!isValid} className="btn mt-3 btn-primary">
   Submit
