@@ -394,3 +394,36 @@ const ExpenseForm = () => {
   );
 };
 ```
+
+### Acessing Input fields
+
+```tsx
+const ExpenseForm = () => {
+  const nameRef = useRef<HTMLInputElement>(null);
+  const amountRef = useRef<HTMLInputElement>(null);
+
+  const person = { name: "", amount: 0 };
+
+  const handlSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    if (nameRef.current !== null) person.name = nameRef.current.value;
+    if (amountRef.current !== null)
+      person.amount = parseInt(amountRef.current.value);
+    console.log(person);
+  };
+
+  return (
+    <form onSubmit={handlSubmit}>
+      <label htmlFor="name">Name</label>
+      <input ref={nameRef} type="text" id="name" className="form-control" />
+
+      <label htmlFor="amount">Amount</label>
+      <input ref={amountRef} type="text" id="amount" className="form-control" />
+
+      <button type="submit" className="btn mt-3 btn-primary">
+        Submit
+      </button>
+    </form>
+  );
+};
+```

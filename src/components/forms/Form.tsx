@@ -1,9 +1,17 @@
-import { FormEvent } from "react";
+import { FormEvent, useRef } from "react";
 
 const ExpenseForm = () => {
+  const nameRef = useRef<HTMLInputElement>(null);
+  const amountRef = useRef<HTMLInputElement>(null);
+
+  const person = { name: "", amount: 0 };
+
   const handlSubmit = (event: FormEvent) => {
     event.preventDefault();
-    console.log("submitted");
+    if (nameRef.current !== null) person.name = nameRef.current.value;
+    if (amountRef.current !== null)
+      person.amount = parseInt(amountRef.current.value);
+    console.log(person);
   };
 
   return (
@@ -12,12 +20,22 @@ const ExpenseForm = () => {
       <form onSubmit={handlSubmit}>
         <div className="form-group">
           <label htmlFor="description">Description</label>
-          <input type="text" id="description" className="form-control" />
+          <input
+            ref={nameRef}
+            type="text"
+            id="description"
+            className="form-control"
+          />
         </div>
 
         <div className="form-group">
           <label htmlFor="amount">Amount</label>
-          <input type="text" id="amount" className="form-control" />
+          <input
+            ref={amountRef}
+            type="text"
+            id="amount"
+            className="form-control"
+          />
         </div>
 
         <div className="form-group">
