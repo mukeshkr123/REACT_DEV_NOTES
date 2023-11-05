@@ -305,3 +305,12 @@ const Alert = ({ children }: Props) => {
 
 export default Alert;
 ```
+
+## Styling Components
+
+### Vanilla Css
+
+-- create a css file with the name of component havng `.css` and css properties
+-- import this file in the componet `import "./..css"`
+
+### Css Modules
