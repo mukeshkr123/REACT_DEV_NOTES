@@ -1,305 +1,271 @@
-Sure, here's the content you provided formatted into a README file:
+Sure, here's the revised README with interfaces added for improved clarity and code organization:
 
-# React Intermediate
+# Getting Started with React JS
 
-## React Query
+## Setting up the Development Environment
 
-React Query is a powerful library for managing data fetching and caching in React applications.
+To start a React project, you can use either `create-vite` or `create-react-app`. Run the following command to set up your project:
 
-### Setting Up React Query
+- Using `create-vite`:
 
-To install React Query, run the following command:
-
-```shell
-npm i @tanstack/react-query
+```bash
+npx create-vite my-react-app
 ```
 
-Next, add the following code to your main.tsx or index.tsx file:
+- Using `create-react-app`:
+
+```bash
+npx create-react-app my-react-app
+```
+
+Replace `my-react-app` with your desired project name.
+
+## Building Components
+
+### Creating a React Component
+
+You can create a functional component like this:
+
+**Message.tsx**
 
 ```jsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
 
-const queryClient = new QueryClient();
-
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
-  </React.StrictMode>
-);
-```
-
-### Fetching Data and Error Handling
-
-```jsx
-import { useQuery } from "@tanstack/react-query";
-
-const TodoList = () => {
-  const fetchTodos = () => axios.get("https://jsonplaceholder.typicode.com/todos").then((res) => res.data);
-
-  const { data: todos, error } = useQuery({
-    queryKey: ["todos"],
-    queryFn: fetchTodos,
-  });
-
-  if (error) return <p>{error}<p/>
-
-  return (
-    <ul className="list-group">
-      {todos?.map((todo) => (
-        <li key={todo.id} className="list-group-item">
-          {todo.title}
-        </li>
-      ))}
-    </ul>
-  );
-};
-
-export default TodoList;
-```
-
-### Showing Loading Indicator
-
-```jsx
-const fetchTodos = () =>
-  axios
-    .get("https://jsonplaceholder.typicode.com/todos")
-    .then((res) => res.data);
-
-const {
-  data: todos,
-  error,
-  isLoading,
-} = useQuery({
-  queryKey: ["todos"],
-  queryFn: fetchTodos,
-});
-
-if (isLoading) return <p>Loading.......</p>;
-```
-
-### Creating a Custom Query Hook
-
-1. Create a custom query hook `useTodos.ts`:
-
-```jsx
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-
-const useTodos = () => {
-  const fetchTodos = () =>
-    axios
-      .get("https://jsonplaceholder.typicode.com/todos")
-      .then((res) => res.data);
-
-  return useQuery({
-    queryKey: ["todos"],
-    queryFn: fetchTodos,
-  });
-};
-
-export default useTodos;
-```
-
-2. Use this custom hook in any component:
-
-```jsx
-import useTodos from "./hooks/useTodos";
-
-const { data: todos, error, isLoading } = useTodos();
-```
-
-### Using React Query DevTools
-
-To install React Query DevTools, run the following command:
-
-```shell
-npm install react-query-devtools
-```
-
-Add the following code in your main JS file:
-
-```jsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      {/* The rest of your application */}
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  );
-}
-```
-
-### Customizing Query Settings
-
-You can customize query settings in the QueryClient. For example, to configure auto-refresh options, you can do the following:
-
-```jsx
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 3,
-      cacheTime: 300_000, // 5 minutes
-      staleTime: 10 * 1000, // 10 seconds
-      refetchOnWindowFocus: false, // Disable refetch on window focus
-      refetchOnReconnect: false, // Disable refetch on network reconnect
-      refetchOnMount: false, // Disable refetch when a component is mounted
-    },
-  },
-});
-```
-
-You can also override these options in a custom query hook:
-
-```jsx
-const useTodos = () => {
-  const fetchTodos = () =>
-    axios.get <
-    Todo >
-    "https://jsonplaceholder.typicode.com/todos".then((res) => res.data);
-
-  return useQuery({
-    queryKey: ["todos"],
-    queryFn: fetchTodos,
-    staleTime: 10 * 1000, // 10 seconds
-  });
-};
-```
-
-Customize the options according to your application's requirements:
-
-- `retry`: Number of retries on failure.
-- `cacheTime`: Time to keep data in cache.
-- `staleTime`: Time until the data is considered stale.
-- `refetchOnWindowFocus`: Whether to refetch data when the window is refocused.
-- `refetchOnReconnect`: Whether to refetch data when the network is reconnected.
-- `refetchOnMount`: Whether to refetch data when a component is mounted.
-  Certainly! Here's the information about parameterized queries added to your README.md:
-
-### Parameterized Queries
-
-You can use parameterized queries in React Query to fetch data based on specific parameters. For example, you can fetch posts for a particular user by passing the `userId` as a parameter to the query.
-
-To use parameterized queries, follow these steps:
-
-1. Create a custom query hook that accepts the parameter you want to use in the query, such as `userId`:
-
-```jsx
-const usePosts = (userId: number | undefined) => {
-  const fetchPosts = () =>
-    axios
-      .get("https://jsonplaceholder.typicode.com/posts", {
-        params: {
-          userId,
-        },
-      })
-      .then((res) => res.data);
-
-  return useQuery<Post[], Error>({
-    queryKey: userId ? ["users", userId, "posts"] : ["posts"], // Whenever userId is changed, React Query fetches posts for this user (dependency).
-    queryFn: fetchPosts,
-    staleTime: 10 * 60 * 60 * 1000, // 10 hours in seconds
-  });
-};
-```
-
-2. Use this custom query hook in your component, passing the `userId` as a parameter:
-
-```jsx
-const { data: posts, isLoading, error } = usePosts(userId);
-// Pass the userId as a parameter
-```
-
-### Pagination Queries
-
-1. Create a custom query hook that accepts a query object with page and pageSize parameters. This hook will fetch a subset of data based on the provided parameters.
-
-```jsx
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-
-interface Post {
-  id: number;
-  title: string;
-  body: string;
-  userId: number;
+function Message() {
+  const name = "Mukesh";
+  return <div>{name}</div>;
 }
 
-interface PostQuery {
-  page: number;
-  pageSize: number;
-}
-
-const usePosts = (query: PostQuery) => {
-  const fetchPosts = () =>
-    axios
-      .get("https://jsonplaceholder.typicode.com/posts", {
-        params: {
-          _start: (query.page - 1) * query.pageSize,
-          _limit: query.pageSize,
-        },
-      })
-      .then((res) => res.data);
-
-  return useQuery<Post[], Error>({
-    queryKey: ["posts", query],
-    queryFn: fetchPosts,
-    staleTime: 10 * 60 * 60 * 1000, // 10 hours in seconds
-    keepPreviousData: true, // Keep previous data for the current page for a seamless experience.
-  });
-};
-
-export default usePosts;
+export default Message;
 ```
 
-2. Use the custom query hook in your component to fetch paginated data. You can control the page and pageSize to load the data you need.
+Consider adding an import statement for React at the top of your component file.
+
+**Fragments** - You can use fragments to wrap multiple elements without adding extra nodes to the DOM.
 
 ```jsx
-import { useState } from "react";
-import usePosts from "./hooks/usePosts";
+<>{/* Your content here */}</>
+```
 
-const PostList = () => {
-  const pageSize = 10;
-  const [page, setPage] = useState(1);
-  const { data: posts, isLoading, error } = usePosts({ page, pageSize });
+### Rendering Lists
 
-  if (isLoading) return <p>Loading........</p>;
+When rendering lists, use the `key` attribute to uniquely identify and optimize the rendering of elements.
 
-  if (error) return <p>{error.message}</p>;
+**List.js**
+
+```jsx
+import React from "react";
+
+interface ListItem {
+  name: string;
+}
+
+function List() {
+  const items: ListItem[] = [
+    { name: "New York" },
+    { name: "Mexico" },
+    { name: "Delhi" },
+    { name: "Patna" },
+    { name: "Mumbai" },
+  ];
 
   return (
     <>
+      <h1>List</h1>
       <ul className="list-group">
-        {posts.map((post) => (
-          <li key={post.id} className="list-group-item">
-            {post.title}
+        {items.map((item, index) => (
+          <li key={index} className="list-group-item">
+            {item.name}
           </li>
         ))}
       </ul>
-      <button
-        className="btn btn-primary my-3"
-        disabled={page === 1}
-        onClick={() => setPage(page - 1)}
-      >
-        Previous
-      </button>
-      <button
-        className="btn btn-primary my-3 ms-1"
-        onClick={() => setPage(page + 1)}
-      >
-        Next
-      </button>
     </>
   );
-};
+}
 
-export default PostList;
+export default List;
 ```
 
-With this setup, you can fetch and display data in pages, allowing users to navigate through the dataset efficiently.
+### Conditional Rendering
+
+You can conditionally render content based on a condition.
+
+**List.js**
+
+```jsx
+import React from "react";
+
+interface ListItem {
+  name: string;
+}
+
+function List() {
+  const items: ListItem[] = [
+    { name: "New York" },
+    { name: "Mexico" },
+    { name: "Delhi" },
+    { name: "Patna" },
+    { name: "Mumbai" },
+  ];
+
+  return (
+    <>
+      <h1>List</h1>
+      {items.length === 0 ? (
+        <p>No items found</p>
+      ) : (
+        <ul className="list-group">
+          {items.map((item, index) => (
+            <li key={index} className="list-group-item">
+              {item.name}
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
+
+export default List;
+```
+
+### Handling Events
+
+You can handle events in React by using event handlers.
+
+```jsx
+<li
+  key={index}
+  className="list-group-item"
+  onClick={() => console.log(item.name)}
+>
+  {item.name}
+</li>
+```
+
+### Managing State
+
+Managing state in React involves using the `useState` hook. Declare a state variable and use it to update the component's state.
+
+**List.js**
+
+```jsx
+import React, { useState } from "react";
+
+interface ListItem {
+  name: string;
+}
+
+function List() {
+  const [selectedIndex, setSelectedIndex] = useState < number > -1;
+
+  // Rest of the component code
+}
+```
+
+### Passing Data via Props
+
+Props allow you to pass data from a parent component to a child component.
+
+**App.js**
+
+```jsx
+import React from "react";
+import List from "./List";
+
+function App() {
+  const items: ListItem[] = [
+    { name: "New York" },
+    { name: "Mexico" },
+    { name: "Delhi" },
+    { name: "Patna" },
+    { name: "Mumbai" },
+  ];
+
+  return (
+    <>
+      <List items={items} heading="Cities" />
+    </>
+  );
+}
+
+export default App;
+```
+
+**List.js**
+
+```jsx
+import React, { useState } from "react";
+
+interface ListProps {
+  items: ListItem[];
+  heading: string;
+}
+
+function List({ items, heading }: ListProps) {
+  // Rest of the component code
+}
+```
+
+### Passing Functions via Props
+
+You can also pass functions as props to child components.
+
+**App.js**
+
+```jsx
+import React from 'react';
+import List from './List';
+
+function App() {
+  const items: ListItem[] = [
+    { name: "New York" },
+    { name: "Mexico" },
+    { name: "Delhi" },
+    { name: "Patna" },
+    { name: "Mumbai" }
+  };
+
+  const handleSelectItem = (item: string) => {
+    console.log(item);
+  }
+
+  return (
+    <>
+      <List items={items} heading="Cities" onSelectItem={handleSelectItem} />
+    </>
+  );
+}
+
+export default App;
+```
+
+**List.js**
+
+```jsx
+import React, { useState } from "react";
+
+interface ListProps {
+  items: ListItem[];
+  heading: string;
+  onSelectItem: (item: string) => void;
+}
+
+function List({ items, heading, onSelectItem }: ListProps) {
+  // Rest of the component code
+}
+```
+
+### State vs Props
+
+**Props:**
+
+- Props are inputs passed to a component.
+- They are similar to function arguments.
+- Props are immutable and cannot be changed within a component.
+
+**State:**
+
+- State represents data managed by a component.
+- It is similar to local variables.
+- State is mutable, and you can update it using hooks like `useState`.

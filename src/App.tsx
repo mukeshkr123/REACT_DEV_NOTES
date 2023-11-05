@@ -1,10 +1,21 @@
-import PostList from "./react-query/PostList";
-const App = () => {
+import ListGroup from "./components/ListGroup";
+
+function App() {
+  const items = ["New Work", "Mexico", "Delhi", "Patna", "Mumbai"];
+
+  const handleSelectItem = (item: string) => {
+    console.log(item);
+  };
+
   return (
-    <div>
-      <PostList />
-    </div>
+    <>
+      <ListGroup
+        items={items}
+        heading="Cities"
+        onSelectItem={handleSelectItem}
+      />
+    </>
   );
-};
+}
 
 export default App;
