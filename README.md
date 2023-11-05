@@ -373,3 +373,24 @@ Inline styles allow you to define styles directly within your React components. 
 - Various UI libraries are available to assist in building beautiful and modern applications. Some popular options include Bootstrap, Material UI, TailwindCSS, DaisyUI, ChakraUI, and more.
 
 Styling React components can greatly impact the user experience, and choosing the right approach depends on your project's requirements and your team's preferences.
+
+## Building Forms
+
+### Handling form submission
+
+```tsx
+const ExpenseForm = () => {
+  const handlSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    console.log("submitted");
+  };
+
+  return (
+    <form onSubmit={handlSubmit}>
+      <button type="submit" className="btn mt-3 btn-primary">
+        Submit
+      </button>
+    </form>
+  );
+};
+```
