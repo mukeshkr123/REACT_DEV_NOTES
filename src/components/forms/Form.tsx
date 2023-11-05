@@ -1,16 +1,27 @@
 import { FieldValues, useForm } from "react-hook-form";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface FormData {
   name: string;
   amount: number;
 }
 
+const schema = z.object({
+  name: z.string().min(3, "Minimum 3 characters required"),
+  amount: z
+    .number({ invalid_type_error: " Amount  is required" })
+    .min(18, "Minimum 18 characters required"),
+});
+
 const ExpenseForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>();
+    formState: { errors, isValid },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
 
   const onSubmit = (data: FieldValues) => console.log(data);
 
@@ -20,26 +31,29 @@ const ExpenseForm = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="name">Name</label>
         <input
-          {...register("name", { required: true, minLength: 3 })}
+          {...register("name")}
           type="text"
           id="name"
           className="form-control"
         />
 
-        {errors.name?.type === "required" && <p>The name field is required</p>}
-        {errors.name?.type === "minLength" && (
-          <p> The name must be at least 3 characters </p>
-        )}
+        {errors.name && <p>{errors.name.message}</p>}
 
         <label htmlFor="amount">Amount</label>
         <input
-          {...register("amount")}
+          {...register("amount", { valueAsNumber: true })}
           type="text"
           id="amount"
           className="form-control"
         />
 
-        <button type="submit" className="btn mt-3 btn-primary">
+        {errors.amount && <p>{errors.amount.message}</p>}
+
+        <button
+          type="submit"
+          disabled={!isValid}
+          className="btn mt-3 btn-primary"
+        >
           Submit
         </button>
       </form>
