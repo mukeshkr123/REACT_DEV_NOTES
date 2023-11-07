@@ -612,3 +612,27 @@ function App() {
 
 export default App;
 ```
+
+### Cancelling a Fetch Request
+
+```tsx
+import axios, { CanceledError } from "axios";
+
+//useEffect
+useEffect(() => {
+  const controller = new AbortController();
+  axios
+    .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+      signal: controller.signal,
+    })
+    .then((res) => {
+      setUsers(res.data);
+    })
+    .catch((err) => {
+      if (err instanceof CanceledError) return;
+      setError(err.message);
+    });
+
+  return () => controller.abort();
+}, []);
+```
