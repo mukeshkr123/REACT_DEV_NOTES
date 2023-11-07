@@ -1,5 +1,5 @@
-import axios, { CanceledError } from "axios";
 import { useState, useEffect } from "react";
+import apiClient, { CanceledError } from "./services/api-client";
 
 interface User {
   id: number;
@@ -14,8 +14,8 @@ function App() {
   //useEffect
   useEffect(() => {
     const controller = new AbortController();
-    axios
-      .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+    apiClient
+      .get<User[]>("/users", {
         signal: controller.signal,
       })
       .then((res) => {
@@ -32,12 +32,10 @@ function App() {
   const deleteUser = (user: User) => {
     const originalUsers = [...users];
     setUsers(users.filter((u) => u.id !== user.id));
-    axios
-      .delete("https://jsonplaceholder.typicode.com/users" + user.id)
-      .catch((err) => {
-        setError(err.message);
-        setUsers(originalUsers);
-      });
+    apiClient.delete("/users" + user.id).catch((err) => {
+      setError(err.message);
+      setUsers(originalUsers);
+    });
   };
 
   return (

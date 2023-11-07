@@ -659,3 +659,37 @@ useEffect(() => {
 
 if (loading) return <p>Loading..... </p>;
 ```
+
+### Extracting a Reusable API Client
+
+-crete a file `/services/api-client.ts`
+
+```tsx
+import axios, { CanceledError } from "axios";
+
+export default axios.create({
+  baseURL: "https://jsonplaceholder.typicode.com",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+export { CanceledError };
+```
+
+-- use this in any component
+
+```tsx
+import apiClient, { CanceledError } from "./services/api-client";
+
+//useEffect
+useEffect(() => {
+  apiClient
+    .get("/users", {
+      signal: controller.signal,
+    })
+    .then((res) => {
+      setUsers(res.data);
+    });
+}, []);
+```
