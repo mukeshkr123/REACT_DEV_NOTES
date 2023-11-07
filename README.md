@@ -547,3 +547,25 @@ const {
   Submit
 </button>;
 ```
+
+## Connecting to the Backend
+
+### UseEffect Hook
+
+- To execute a piece of code after component is rendered.
+
+```tsx
+function App() {
+  const ref = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (ref.current) ref.current.focus;
+  }, []);
+
+  return (
+    <>
+      <input ref={ref} type="text" className="form-control" />
+    </>
+  );
+}
+```
