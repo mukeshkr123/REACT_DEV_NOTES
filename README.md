@@ -636,3 +636,26 @@ useEffect(() => {
   return () => controller.abort();
 }, []);
 ```
+
+### Showing loading indicator
+
+```tsx
+const [loading, setLoading] = useState(false);
+
+//useEffect
+useEffect(() => {
+  setLoading(true);
+  axios
+    .get("https://jsonplaceholder.typicode.com/users")
+    .then((res) => {
+      setLoading(false);
+      setUsers(res.data);
+    })
+    .catch((err) => {
+      setLoading(false);
+      setError(err.message);
+    });
+}, []);
+
+if (loading) return <p>Loading..... </p>;
+```
