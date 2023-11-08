@@ -554,3 +554,52 @@ const TaskList = () => {
 
 export default TaskList;
 ```
+
+## Sharing State using React Context
+
+**Sharing state** - Lift the state up to the closest parent and pass it down as props to child components.
+
+- create context
+
+```tsx
+import { Task, TaskAction } from "../reducers/taskReducer";
+import React from "react";
+
+interface TasksContextType {
+  tasks: Task[];
+  dispatch: React.Dispatch<TaskAction>;
+}
+
+const TasksContext = React.createContext<TasksContextType>(
+  {} as TasksContextType
+);
+
+export default TasksContext;
+```
+
+- add this to the main componet where state is present and want to share as in form or Provider
+
+```tsx
+const App = () => {
+  const [tasks, dispatch] = useReducer(taskReducer, []);
+
+  return (
+    <>
+      <TasksContext.Provider value={{ tasks, dispatch }}>
+        <TaskList />
+      </TasksContext.Provider>
+    </>
+  );
+};
+
+export default App;
+```
+
+-- use the context in any component under App component
+
+```tsx
+import { useContext } from "react";
+import TasksContext from "./context/task-context";
+
+const { dispatch, tasks } = useContext(TasksContext);
+```
