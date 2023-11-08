@@ -389,7 +389,7 @@ add this in above file
       )}```
 ````
 
-### Showing Mutations Errors
+### Showing Mutations Progress
 
 add this in above file
 
@@ -397,4 +397,71 @@ add this in above file
 <button disabled={addTodo.isLoading} className="btn btn-primary">
   {addTodo.isLoading ? "Adding.." : "Add"}
 </button>
+```
+
+### Global state Management
+
+-Consolidating state logic with reducer
+-Sharing data using React Context
+-When to use React Context
+-React Context vs Redux
+-Managing application state using zustand
+
+### Consolidating State Logic with a Reducer
+
+**Reducer** - A function that allows us to centralize state updates in a component.
+
+- create a reducer
+
+```tsx
+interface Action {
+  type: "INCREMENT" | "RESET";
+}
+
+const counterReducer = (state: number, action: Action): number => {
+  if (action.type === "INCREMENT") return state + 1;
+  if (action.type === "RESET") return 0;
+  return state;
+};
+
+export default counterReducer;
+```
+
+- use this reducer
+
+```tsx
+import { useReducer } from "react";
+import counterReducer from "./reducers/counterReducer";
+
+const Counter = () => {
+  const [value, dispatch] = useReducer(counterReducer, 0);
+
+  return (
+    <div>
+      Counter ({value})
+      <button
+        onClick={() =>
+          dispatch({
+            type: "INCREMENT",
+          })
+        }
+        className="btn btn-primary mx-1"
+      >
+        Increment
+      </button>
+      <button
+        onClick={() =>
+          dispatch({
+            type: "RESET",
+          })
+        }
+        className="btn btn-primary mx-1"
+      >
+        Reset
+      </button>
+    </div>
+  );
+};
+
+export default Counter;
 ```

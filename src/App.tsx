@@ -1,11 +1,9 @@
-import TodoForm from "./react-query/TodoForm";
-import TodoList from "./react-query/TodoList";
+import Counter from "./state-management/Counter";
 
 const App = () => {
   return (
     <>
-      <TodoForm />
-      <TodoList />
+      <Counter />
     </>
   );
 };
