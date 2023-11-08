@@ -465,3 +465,92 @@ const Counter = () => {
 
 export default Counter;
 ```
+
+### Creating Complex Actions
+
+-creating a task reducer
+
+```tsx
+interface Task {
+  id: number;
+  title: string;
+}
+
+interface AddTask {
+  type: "ADD";
+  task: Task;
+}
+
+interface DeleteTask {
+  type: "DELETE";
+  id: number;
+}
+
+type TaskAction = AddTask | DeleteTask;
+
+const taskReducer = (tasks: Task[], action: TaskAction) => {
+  switch (action.type) {
+    case "ADD":
+      return [...tasks, action.task];
+    case "DELETE":
+      return tasks.filter((task) => task.id !== action.id);
+    default:
+      return tasks;
+  }
+};
+
+export default taskReducer;
+```
+
+-use taskreducer
+
+```tsx
+import { useReducer } from "react";
+import taskReducer from "./reducers/taskReducer";
+
+const TaskList = () => {
+  const [tasks, dispatch] = useReducer(taskReducer, []);
+
+  return (
+    <>
+      <button
+        onClick={() =>
+          dispatch({
+            type: "ADD",
+            task: {
+              id: Date.now(),
+              title: "Task " + Date.now(),
+            },
+          })
+        }
+        className="btn btn-primary my-3"
+      >
+        Add Task
+      </button>
+      <ul className="list-group">
+        {tasks.map((task) => (
+          <li
+            key={task.id}
+            className="list-group-item d-flex justify-content-between align-items-center"
+          >
+            <span className="flex-grow-1">{task.title}</span>
+            <button
+              className="btn btn-outline-danger"
+              onClick={() =>
+                dispatch({
+                  type: "DELETE",
+                  id: task.id,
+                })
+              }
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+};
+
+export default TaskList;
+```
