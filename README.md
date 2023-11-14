@@ -773,3 +773,35 @@ const Counter = () => {
 
 export default Counter;
 ```
+
+### Preventing Unnecessary Renders with Selectors
+
+-In Zustand, selectors can be used to prevent unnecessary renders by memoizing and selecting specific data from the store.
+
+```tsx
+import create from "zustand";
+
+interface CounterStore {
+  counter: number;
+  increment: () => void;
+  reset: () => void;
+}
+
+const useCounterStore = create<CounterStore>((set) => ({
+  counter: 0,
+  increment: () => set((state) => ({ counter: state.counter + 1 })),
+  reset: () => set(() => ({ counter: 0 })),
+}));
+
+// Selector to get the counter value
+export const useCounterValue = (state: CounterStore) => state.counter;
+
+// Component using the selector
+const CounterComponent = () => {
+  const counter = useCounterValue(useCounterStore((state) => state));
+
+  // Render logic here
+
+  return <div>Counter: {counter}</div>;
+};
+```
