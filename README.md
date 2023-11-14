@@ -726,3 +726,50 @@ Split up a context into smaller and focused ones, each having a single responsib
   - Application size and complexity.
   - Need for advanced features and middleware.
   - Team preferences and collaboration.
+
+## Managing Application State with Zustand
+
+1. Install - `npm install zustand`
+
+- create a store
+
+```tsx
+import { create } from "zustand";
+
+interface CounterStore {
+  counter: number;
+  increment: () => void;
+  reset: () => void;
+}
+
+const useCounterStore = create<CounterStore>((set) => ({
+  counter: 0,
+  increment: () => set((state) => ({ counter: state.counter + 1 })),
+  reset: () => set(() => ({ counter: 0 })),
+}));
+
+export default useCounterStore;
+```
+
+- use this in any component
+
+```tsx
+import useCounterStore from "./store";
+
+const Counter = () => {
+  const { counter, increment, reset } = useCounterStore();
+  return (
+    <div>
+      Counter ({counter})
+      <button onClick={() => increment()} className="btn btn-primary mx-1">
+        Increment
+      </button>
+      <button onClick={() => reset()} className="btn btn-primary mx-1">
+        Reset
+      </button>
+    </div>
+  );
+};
+
+export default Counter;
+```
