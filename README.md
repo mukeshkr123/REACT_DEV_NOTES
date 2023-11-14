@@ -831,3 +831,42 @@ if (process.env.NODE_ENV !== "development")
 
 export default useCounterStore;
 ```
+
+## Routing with React Router
+
+### Setting Up Routing
+
+1. install - `npm install react-router-dom`
+
+2. create a `routes.tsx`
+
+```tsx
+import { createBrowserRouter } from "react-router-dom";
+import HomePage from "../pages/home/HomePage";
+import LoginPage from "../pages/login/Login";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <HomePage />,
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+]);
+
+export default router;
+```
+
+2. Wrap this in main component
+
+```tsx
+import { RouterProvider } from "react-router-dom";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
+);
+```

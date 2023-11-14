@@ -1,0 +1,26 @@
+/* HomePage.css */
+
+.home-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+}
+
+header {
+  background-color: #3498db;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+main {
+  padding: 20px 0;
+}
+
+footer {
+  margin-top: 20px;
+  padding: 10px 0;
+  text-align: center;
+  background-color: #eee;
+}
