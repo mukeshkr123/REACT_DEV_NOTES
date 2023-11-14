@@ -667,7 +667,7 @@ if (loading) return <p>Loading..... </p>;
 ```tsx
 import axios, { CanceledError } from "axios";
 
-export default axios.create({
+export defaultK axios.create({
   baseURL: "https://jsonplaceholder.typicode.com",
   headers: {
     "Content-Type": "application/json",
@@ -759,4 +759,54 @@ const deleteUser = (user: User) => {
     setUsers(originalUsers);
   });
 };
+```
+
+### Creating a Generic HTTP Service
+
+-- create a separate reusable `http-service`
+
+```tsx
+import apiClient from "./api-client";
+
+class HttpService {
+  endpoint: string;
+
+  constructor(endpoint: string) {
+    this.endpoint = endpoint;
+  }
+
+  getAll<T>() {
+    const controller = new AbortController();
+    const request = apiClient.get<T[]>(this.endpoint, {
+      signal: controller.signal,
+    });
+
+    return { request, cancel: () => controller.abort() };
+  }
+
+  delete(id: number) {
+    return apiClient.delete(this.endpoint + id);
+  }
+
+  create<T>(entity: T) {
+    return apiClient.post(this.endpoint, entity);
+  }
+}
+
+const create = (endpoint: string) => new HttpService(endpoint);
+
+export default create;
+```
+
+-- use this in any `service`
+
+```tsx
+import create from "./http-service";
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+export default create("/users");
 ```
