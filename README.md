@@ -1,6 +1,51 @@
-Sure, here's the revised README with interfaces added for improved clarity and code organization:
-
 # Getting Started with React JS
+
+# Table of Contents
+
+1. [Setting up the Development Environment](#setting-up-the-development-environment)
+
+2. [Building Components](#building-components)
+
+   1. [Creating a React Component](#creating-a-react-component)
+   2. [Rendering Lists](#rendering-lists)
+   3. [Conditional Rendering](#conditional-rendering)
+   4. [Handling Events](#handling-events)
+   5. [Managing State](#managing-state)
+   6. [Passing Data via Props](#passing-data-via-props)
+   7. [Passing Functions via Props](#passing-functions-via-props)
+   8. [State vs Props](#state-vs-props)
+   9. [Passing children](#passing-children)
+
+3. [Styling React Components](#styling-react-components)
+
+   1. [Vanilla CSS](#vanilla-css)
+   2. [CSS Modules](#css-modules)
+   3. [CSS-in-JS](#css-in-js)
+   4. [Separation of Concerns](#separation-of-concerns)
+   5. [Inline Styles](#inline-styles)
+   6. [Additional Resources](#additional-resources)
+
+4. [Building Forms in React](#building-forms-in-react)
+
+   1. [Handling Form Submission](#handling-form-submission)
+   2. [Accessing Input Fields](#accessing-input-fields)
+      1. [Using `ref` Hook](#using-ref-hook)
+      2. [Using `useState` Hook](#using-usestate-hook)
+   3. [Managing State with React Hook Form](#managing-state-with-react-hook-form)
+   4. [Applying Validations](#applying-validations)
+   5. [Schema-Based Validation with Zod](#schema-based-validation-with-zod)
+   6. [Disabling Submit Button](#disabling-submit-button)
+
+5. [Connecting to the Backend with React](#connecting-to-the-backend-with-react)
+
+   1. [useEffect Hook](#useeffect-hook)
+   2. [Sending HTTP Requests](#sending-http-requests)
+   3. [Cancelling a Fetch Request](#cancelling-a-fetch-request)
+   4. [Showing a Loading Indicator](#showing-a-loading-indicator)
+   5. [Extracting a Reusable API Client](#extracting-a-reusable-api-client)
+   6. [Extracting the User Service](#extracting-the-user-service)
+   7. [Creating a Generic HTTP Service](#creating-a-generic-http-service)
+   8. [Creating a Custom Data Fetching Hook](#creating-a-custom-data-fetching-hook)
 
 ## Setting up the Development Environment
 
@@ -548,18 +593,20 @@ const {
 </button>;
 ```
 
-## Connecting to the Backend
+## Connecting to the Backend with React
 
-### UseEffect Hook
+This project demonstrates how to connect a React front-end application to a backend server using Axios for HTTP requests. It includes examples of using the useEffect hook for executing code after component rendering, fetching data from the backend, canceling a fetch request, showing a loading indicator, and extracting reusable components and services.
 
-- To execute a piece of code after component is rendered.
+### useEffect Hook
+
+The `useEffect` hook is used to execute a piece of code after the component is rendered. In the example below, it is used to focus on an input element:
 
 ```tsx
 function App() {
   const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (ref.current) ref.current.focus;
+    if (ref.current) ref.current.focus();
   }, []);
 
   return (
@@ -570,12 +617,11 @@ function App() {
 }
 ```
 
-### Fetching Data
+**Fetching Data**-
 
-**Sending Http Requests**
+### Sending HTTP Requests
 
-- fetch()
-- axios
+HTTP requests are made using Axios in the following example:
 
 ```tsx
 import axios from "axios";
@@ -590,7 +636,6 @@ interface User {
 function App() {
   const [users, setUsers] = useState<User[]>([]);
 
-  //useEffect
   useEffect(() => {
     axios
       .get<User[]>("https://jsonplaceholder.typicode.com/users")
@@ -615,10 +660,11 @@ export default App;
 
 ### Cancelling a Fetch Request
 
+To cancel a fetch request, an `AbortController` is used as follows:
+
 ```tsx
 import axios, { CanceledError } from "axios";
 
-//useEffect
 useEffect(() => {
   const controller = new AbortController();
   axios
@@ -637,12 +683,13 @@ useEffect(() => {
 }, []);
 ```
 
-### Showing loading indicator
+### Showing a Loading Indicator
+
+A loading indicator is shown while fetching data:
 
 ```tsx
 const [loading, setLoading] = useState(false);
 
-//useEffect
 useEffect(() => {
   setLoading(true);
   axios
@@ -662,12 +709,13 @@ if (loading) return <p>Loading..... </p>;
 
 ### Extracting a Reusable API Client
 
--crete a file `/services/api-client.ts`
+An API client is extracted into a separate file `/services/api-client.ts`:
 
 ```tsx
+// /services/api-client.ts
 import axios, { CanceledError } from "axios";
 
-export defaultK axios.create({
+export default axios.create({
   baseURL: "https://jsonplaceholder.typicode.com",
   headers: {
     "Content-Type": "application/json",
@@ -677,12 +725,12 @@ export defaultK axios.create({
 export { CanceledError };
 ```
 
--- use this in any component
+This client is then used in any component:
 
 ```tsx
+// Any component
 import apiClient, { CanceledError } from "./services/api-client";
 
-//useEffect
 useEffect(() => {
   apiClient
     .get("/users", {
@@ -696,9 +744,10 @@ useEffect(() => {
 
 ### Extracting the User Service
 
-- create a separate `user-service`
+A separate `user-service` is created to handle user-related API calls:
 
 ```tsx
+// /services/user-service.ts
 import apiClient from "./api-client";
 
 export interface User {
@@ -729,13 +778,13 @@ class UserService {
 export default new UserService();
 ```
 
--- use anywhere in any compoent
+This service is then used in any component:
 
 ```tsx
+// Any component
 const [users, setUsers] = useState<User[]>([]);
 const [error, setError] = useState(" ");
 
-//useEffect
 useEffect(() => {
   const { request, cancel } = userService.getAllUsers();
 
@@ -763,9 +812,10 @@ const deleteUser = (user: User) => {
 
 ### Creating a Generic HTTP Service
 
--- create a separate reusable `http-service`
+A generic HTTP service is created to handle common HTTP operations:
 
 ```tsx
+// /services/http-service.ts
 import apiClient from "./api-client";
 
 class HttpService {
@@ -798,9 +848,10 @@ const create = (endpoint: string) => new HttpService(endpoint);
 export default create;
 ```
 
--- use this in any `service`
+This service is then used in any service:
 
 ```tsx
+// Any service
 import create from "./http-service";
 
 export interface User {
@@ -809,4 +860,53 @@ export interface User {
   email: string;
 }
 export default create("/users");
+```
+
+### Creating a Custom Data Fetching Hook
+
+A custom data fetching hook `useUsers.ts` is created to encapsulate user-related logic:
+
+```tsx
+// /hooks/useUsers.ts
+import { CanceledError } from "axios";
+import { useState, useEffect } from "react";
+import userService, { User } from "../services/user-service";
+
+const useUsers = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [error, setError] = useState(" ");
+  const [isloading, setisloading] = useState(false);
+
+  useEffect(() => {
+    setisloading(true);
+    const { request, cancel } = userService.getAll<User>();
+    request
+      .then((res) => {
+        setUsers(res.data);
+        setisloading(false);
+      })
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+        setError(err.message);
+        setisloading(false);
+      });
+
+    return () => cancel();
+  }, []);
+
+  return { users, error, isloading, setError, set
+
+Users };
+};
+
+export default useUsers;
+```
+
+This hook can then be used in any component:
+
+```tsx
+// Any component
+import useUsers from "./hooks/useUsers";
+
+const { error, isloading, users, setError, setUsers } = useUsers();
 ```
