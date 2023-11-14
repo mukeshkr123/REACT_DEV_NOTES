@@ -657,3 +657,72 @@ export default AuthContext;
 ```tsx
 const { user, dispatch } = useAuth();
 ```
+
+**Splitting Contexts for Efficiency**
+
+React Context => A context should only hold values that are closely related and tend to change together.
+
+**Minimizing Renders**
+
+Split up a context into smaller and focused ones, each having a single responsibility.
+
+**When to Use Context**
+
+1. Server state ==> React Query
+2. Client state ==> Local state + React Context (useState(), useReducer())
+
+**React Context Usage Scenarios:**
+
+1. **Server State (React Query):**
+
+   - **Use Case:** Manage and cache server data efficiently.
+   - **Implementation:** Combine React Query for server-state with React Context for seamless global state sharing.
+
+2. **Client State (Local State or `useReducer()`):**
+
+   - **Use Case:** Handle local component state.
+   - **Implementation:** For smaller-scale state, use local state or `useReducer()` within the component; Context is unnecessary for isolated state.
+
+3. **Combining Server and Client State:**
+
+   - **Use Case:** Access both server-state and local client-state.
+   - **Implementation:** Use React Query for server state, and React Context for global client state.
+
+4. **Avoiding Prop Drilling:**
+
+   - **Use Case:** Eliminate passing props through multiple layers.
+   - **Implementation:** Employ React Context for a centralized state store, reducing prop drilling complexity.
+
+5. **Dynamic Theming or Styling:**
+
+   - **Use Case:** Support dynamic theming or styling changes.
+   - **Implementation:** Store styling info in React Context for components to adjust appearance dynamically.
+
+6. **Optimizing Performance (Medium-sized Apps):**
+   - **Use Case:** Minimize overhead in medium-sized apps.
+   - **Implementation:** Use React Context for lightweight state management, suitable for smaller to medium-sized applications.
+
+### React Context vs Redux
+
+#### **React Context:**
+
+- **Pros:**
+  - Lightweight and simple.
+  - Ideal for smaller to medium-sized apps.
+  - Avoids prop drilling with centralized state.
+  - Seamless integration with React Hooks.
+
+#### **Redux:**
+
+- **Pros:**
+  - Predictable state management.
+  - Middleware support for advanced features.
+  - Suitable for large applications with complex state.
+  - Robust ecosystem and powerful DevTools.
+
+#### **Choosing Between Them:**
+
+- **Consider:**
+  - Application size and complexity.
+  - Need for advanced features and middleware.
+  - Team preferences and collaboration.
