@@ -870,3 +870,33 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   </React.StrictMode>
 );
 ```
+
+### Navigation
+
+**Navigation with Link Component**
+
+```tsx
+import { Link } from "react-router-dom";
+<Link to="/login"> Login </Link>;
+```
+
+**Programmatically Navigate with useNavigate**
+
+```tsx
+import { useNavigate } from "react-router-dom";
+
+const MyComponent = () => {
+  const navigate = useNavigate();
+
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        navigate("/");
+      }}
+    >
+      {/* Your form content here */}
+    </form>
+  );
+};
+```
