@@ -693,3 +693,70 @@ useEffect(() => {
     });
 }, []);
 ```
+
+### Extracting the User Service
+
+- create a separate `user-service`
+
+```tsx
+import apiClient from "./api-client";
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+class UserService {
+  getAllUsers() {
+    const controller = new AbortController();
+    const request = apiClient.get<User[]>("/users", {
+      signal: controller.signal,
+    });
+
+    return { request, cancel: () => controller.abort() };
+  }
+
+  deleteUser(id: number) {
+    return apiClient.delete("/users" + id);
+  }
+
+  addUser(user: User) {
+    return apiClient.post("/users", user);
+  }
+}
+
+export default new UserService();
+```
+
+-- use anywhere in any compoent
+
+```tsx
+const [users, setUsers] = useState<User[]>([]);
+const [error, setError] = useState(" ");
+
+//useEffect
+useEffect(() => {
+  const { request, cancel } = userService.getAllUsers();
+
+  request
+    .then((res) => {
+      setUsers(res.data);
+    })
+    .catch((err) => {
+      if (err instanceof CanceledError) return;
+      setError(err.message);
+    });
+
+  return () => cancel();
+}, []);
+
+const deleteUser = (user: User) => {
+  const originalUsers = [...users];
+  setUsers(users.filter((u) => u.id !== user.id));
+  userService.deleteUser(user.id).catch((err) => {
+    setError(err.message);
+    setUsers(originalUsers);
+  });
+};
+```
