@@ -15,12 +15,12 @@ const TodoForm = () => {
   const queryClient = useQueryClient();
   const addTodo = useMutation<Todo, Error, Todo>({
     // Define the mutation function
-    mutationFn: (todo: Todo) =>
+    mutationFn: () =>
       axios
         .post<Todo>("https://jsonplaceholder.typicode.com/todos")
         .then((res) => res.data),
     // Define the action to be taken after a successful mutation
-    onSuccess: (savedTodo, newTodo) => {
+    onSuccess: (savedTodo) => {
       console.log(savedTodo);
 
       // Invalidate the cache - approach 1
